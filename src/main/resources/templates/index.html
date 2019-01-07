@@ -6,4 +6,21 @@
 </head>
 <body>
 <h1>My Recipes!</h1>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <td style="width: 150px;" >Id</td>
+        <td style="width: 150px;">Recipe</td>
+
+
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="recipe : ${recipes}">
+        <td th:text="${recipe.getId()}">Id</td>
+        <td th:text="${recipe.getDescription()}">Description</td>
+    </tr>
+    </tbody>
+</table>
 </body>

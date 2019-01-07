@@ -23,6 +23,14 @@ public class Ingredient {
 
         return description;
     }
+    public Ingredient(){}
+
+    public Ingredient(String description, BigDecimal amount, UnitOfMeasure uom){
+        this.description = description;
+        this.amount = amount;
+        this.uom = uom;
+
+    }
 
     public UnitOfMeasure getUom() {
         return uom;
