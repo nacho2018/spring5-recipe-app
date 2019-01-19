@@ -1,5 +1,7 @@
 package guru.springframework.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -20,5 +22,21 @@ public class Category {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<Recipe> getRecipies() {
+        return recipies;
+    }
+
+    public void setRecipies(Set<Recipe> recipies) {
+        this.recipies = recipies;
     }
 }
