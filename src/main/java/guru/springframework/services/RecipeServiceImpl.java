@@ -4,8 +4,8 @@ import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class RecipeServiceImpl implements RecipeService{
@@ -18,9 +18,9 @@ public class RecipeServiceImpl implements RecipeService{
     }
 
     @Override
-    public List<Recipe> getRecipes() {
+    public Set<Recipe> getRecipes() {
         Iterable<Recipe> recipes =  this.recipeRepository.findAll();
-        List<Recipe> listOfRecipes = new ArrayList<>();
+        Set<Recipe> listOfRecipes = new HashSet<>();
 
        if (null != recipes){
            recipes.forEach(recipe -> {

@@ -8,6 +8,8 @@ import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
 
 import guru.springframework.domain.Recipe;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,8 @@ public class RecipeServiceImplTest {
         recipeService = new RecipeServiceImpl(recipeRepository);
     }
 
+
+
     @Test
     public void getRecipes() {
 
@@ -38,7 +42,7 @@ public class RecipeServiceImplTest {
 
         when(recipeRepository.findAll()).thenReturn(recipeData);
 
-        List<Recipe> recipes = recipeService.getRecipes();
+        Set<Recipe> recipes = recipeService.getRecipes();
         assertEquals(recipes.size(), 1);
         verify(recipeRepository, times(1)).findAll();
     }
