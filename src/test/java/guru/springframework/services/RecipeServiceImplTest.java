@@ -1,21 +1,18 @@
 package guru.springframework.services;
 
+import guru.springframework.commands.NotesCommand;
+import guru.springframework.commands.RecipeCommand;
+import guru.springframework.converters.*;
 import guru.springframework.repositories.RecipeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.MockitoAnnotations;
-
 import guru.springframework.domain.Recipe;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import static org.junit.Assert.*;
 
 public class RecipeServiceImplTest {
@@ -26,11 +23,32 @@ public class RecipeServiceImplTest {
     @Mock
     RecipeRepository recipeRepository;
 
+    RecipeCommandToRecipe recipeCommandToRecipe;
+
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
+
+
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
 
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        //recipeCommandToRecipe attributes
+        CategoryCommandToCategory categoryConverter = new CategoryCommandToCategory();
+        UnitOfMeasureCommandToUnitOfMeasure uomConverter = new UnitOfMeasureCommandToUnitOfMeasure();
+        IngredientCommandToIngredient ingredientConverter = new IngredientCommandToIngredient(uomConverter);
+        NotesCommandToNotes notesConverter = new NotesCommandToNotes();
+
+        recipeCommandToRecipe = new RecipeCommandToRecipe(categoryConverter, ingredientConverter, notesConverter);
+
+        //recipeToRecipeCommand attributes
+        CategoryToCategoryCommand categoryConverterBis = new CategoryToCategoryCommand();
+        UnitOfMeasureToUnitOfMeasureCommand uomConverterBis = new UnitOfMeasureToUnitOfMeasureCommand();
+        IngredientToIngredientCommand ingredientConverterBis = new IngredientToIngredientCommand(uomConverterBis);
+        NotesToNotesCommand notesConverterBis = new NotesToNotesCommand();
+        recipeToRecipeCommand = new RecipeToRecipeCommand(categoryConverterBis, ingredientConverterBis, notesConverterBis);
+
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
 
@@ -62,6 +80,31 @@ public class RecipeServiceImplTest {
         }
 
         assertEquals(recipes.get().getId(), id);
+
+
+    }
+    @Test
+    public void saveRecipeCommandTest(){
+
+        RecipeCommand commandEntry = new RecipeCommand();
+        commandEntry.setId(1L);
+
+        NotesCommand notesCommand = new NotesCommand();
+        notesCommand.setId(1L);
+        notesCommand.setRecipeNotes("recipeNotes");
+        commandEntry.setNotes(notesCommand);
+
+        Recipe savedRecipe = new Recipe();
+        savedRecipe.setId(1L);
+
+        when(recipeRepository.save(any(Recipe.class))).thenReturn(savedRecipe);
+
+        RecipeCommand commandOutput = recipeService.saveRecipeCommand(commandEntry);
+
+        assertEquals(1L, commandOutput.getId().longValue());
+
+
+
 
 
     }
