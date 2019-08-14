@@ -4,16 +4,23 @@ import guru.springframework.domain.*;
 import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMesureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -83,6 +90,7 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         UnitOfMeasure uomEach = uomEachOptional.get();
 
         Recipe recipe = new Recipe();
+        recipe.setType(Type.NON_SPICY);
         recipe.setDescription("Perfect Guacamole Recipe");
         recipe.setDifficulty(Difficulty.EASY);
         recipe.setDirections("1 Cut avocado, remove flesh: Cut the avocados in half. Remove seed.\n" +
@@ -120,9 +128,44 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         recipe.getCategories().add(americanCategory);
         recipe.getCategories().add(mexicanCategory);
 
+        //recipe.setImage(this.getBytesFromImage("guacamole.jpg"));
+
         recipies.add(recipe);
 
         return recipies;
 
     }
+
+  /*  private Byte[] getBytesFromImage(String fileName){
+
+        byte[] imageInByte;
+        Byte[] byteObjects;
+
+        try {
+
+            BufferedImage originalImage = ImageIO.read(new File(
+                    fileName));
+
+            // convert BufferedImage to byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(originalImage, "jpg", baos);
+            baos.flush();
+            imageInByte = baos.toByteArray();
+            baos.close();
+
+            byteObjects = new Byte[imageInByte.length];
+
+            int i = 0;
+            // Associating Byte array values with bytes. (byte[] to Byte[])
+            for (byte b : imageInByte){
+                byteObjects[i++] = b;  // Autoboxing.
+            }
+
+        }catch(IOException ex){
+            log.error("Error handling image file: " + ex.getMessage());
+            return null;
+        }
+        return byteObjects;
+
+    }*/
 }

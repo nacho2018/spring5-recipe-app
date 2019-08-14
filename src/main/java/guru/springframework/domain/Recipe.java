@@ -10,6 +10,8 @@ public class Recipe {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
+    private Type type;
 
     private String description;
     private Integer prepTime;
@@ -105,6 +107,10 @@ public class Recipe {
     public Notes getNotes() {
         return notes;
     }
+
+    public void setType(Type type){this.type = type;}
+
+    public Type getType(){return this.type;}
 
     public void setNotes(Notes notes) {
 
