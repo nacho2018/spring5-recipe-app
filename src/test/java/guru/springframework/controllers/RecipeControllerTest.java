@@ -1,5 +1,6 @@
 package guru.springframework.controllers;
 
+import guru.springframework.commands.RecipeCommand;
 import guru.springframework.domain.Recipe;
 import guru.springframework.services.RecipeService;
 import org.junit.Before;
@@ -14,8 +15,7 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class RecipeControllerTest {
 
@@ -27,14 +27,17 @@ public class RecipeControllerTest {
 
     RecipeController recipeController;
 
+    MockMvc mockMvc;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.recipeController = new RecipeController(recipeService);
+        this.mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
     }
 
     @Test
-    public void getShowPage() {
+    public void testGetShowPage() {
 
         when(recipeService.findById(Long.valueOf("111"))).thenReturn(recipe);
 
@@ -47,11 +50,26 @@ public class RecipeControllerTest {
 
     @Test
     public void testMockMVC() throws Exception{
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
 
-        mockMvc.perform(get("/recipe/111/show"))
+        mockMvc.perform(get("/recipe/show/111"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"));
+
+    }
+
+    @Test
+    public void testGetUpdateView() throws Exception{
+
+        RecipeCommand command = new RecipeCommand();
+        command.setId(1L);
+
+        when(recipeService.findCommandById(anyLong())).thenReturn(command);
+
+        mockMvc.perform(get("/recipe/update/111"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/recipeform"))
+                .andExpect(model().attributeExists("recipe"));
+
 
     }
 }
